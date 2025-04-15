@@ -11,7 +11,7 @@ import SwiftUI
 struct Dithering_AlgorithmApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ImageView()
         }
     }
 }

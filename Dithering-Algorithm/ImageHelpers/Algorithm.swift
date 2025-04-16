@@ -11,6 +11,7 @@ enum Algorithm: String, CaseIterable {
   case none = "None"
   case grayscale = "Grayscale"
   case thresholding = "Thresholding"
+  case atkinson = "Atkinson"
   
   func rgbaMatrix() -> [[RGBA]] {
     switch self {
@@ -20,6 +21,8 @@ enum Algorithm: String, CaseIterable {
       PixelReader.grayscaleRGBA(from:.catFullColor)
     case .thresholding:
       PixelReader.thresholdingRGBA(from:.catFullColor)
+    case .atkinson:
+      PixelReader.atkinsonRGBA(from:.catFullColor)
     }
   }
 }

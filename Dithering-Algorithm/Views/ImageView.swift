@@ -9,42 +9,73 @@ import SwiftUI
 import UIKit
 
 struct ImageView: View {
-  @State private var selectedAlgorithm = Algorithm.none
+  @State private var topAlgorithm = Algorithm.none
+  @State private var bottomAlgorithm = Algorithm.atkinson
   @State private var rgba: [[RGBA]] = []
-  @State private var rebuiltImage: Image = Image(systemName: "xmark.circle")
+  @State private var topImage: Image = Image(systemName: "xmark.circle")
+  @State private var bottomImage: Image = Image(systemName: "xmark.circle")
   
   var body: some View {
     VStack {
-      Picker("Algo", selection: $selectedAlgorithm) {
-        ForEach(Algorithm.allCases, id: \.self) { algo in
-          Text(algo.rawValue)
-        }
-      }
+      topPicker()
       
-      Image("cat_fullcolor")
+      topImage
         .resizable()
-        .aspectRatio(contentMode: .fit)
+        .scaledToFit()
       
-      rebuiltImage
+      bottomPicker()
+      
+      bottomImage
         .resizable()
         .scaledToFit()
       
     }
     .onAppear {
-      updateImage()
+      updateTopImage()
+      updateBottomImage()
     }
-    .onChange(of: selectedAlgorithm, {
-      updateImage()
+    .onChange(of: topAlgorithm, {
+      updateTopImage()
+    })
+    .onChange(of: bottomAlgorithm, {
+      updateBottomImage()
     })
     .padding()
   }
   
-  private func updateImage() {
-    rgba = selectedAlgorithm.rgbaMatrix()
+  private func updateTopImage() {
+    rgba = topAlgorithm.rgbaMatrix()
     if let cgImage = PixelReader.makeCGImage(from: rgba) {
-      rebuiltImage = Image(decorative: cgImage, scale: 1.0)
+      topImage = Image(decorative: cgImage, scale: 1.0)
     } else {
-      rebuiltImage = Image(systemName: "xmark.circle")
+      topImage = Image(systemName: "xmark.circle")
+    }
+  }
+  
+  private func updateBottomImage() {
+    rgba = bottomAlgorithm.rgbaMatrix()
+    if let cgImage = PixelReader.makeCGImage(from: rgba) {
+      bottomImage = Image(decorative: cgImage, scale: 1.0)
+    } else {
+      bottomImage = Image(systemName: "xmark.circle")
+    }
+  }
+  
+  @ViewBuilder
+  private func topPicker() -> some View {
+    Picker("Algo", selection: $topAlgorithm) {
+      ForEach(Algorithm.allCases, id: \.self) { algo in
+        Text(algo.rawValue)
+      }
+    }
+  }
+  
+  @ViewBuilder
+  private func bottomPicker() -> some View {
+    Picker("Algo", selection: $bottomAlgorithm) {
+      ForEach(Algorithm.allCases, id: \.self) { algo in
+        Text(algo.rawValue)
+      }
     }
   }
 }

@@ -1,25 +1,19 @@
 //
-//  PixelReader+Atkinson.swift
+//  PixelReader+Aman.swift
 //  Dithering-Algorithm
 //
-//  Created by Manuel Lopez on 4/14/25.
+//  Created by Manuel Lopez on 4/15/25.
 //
 
 import CoreGraphics
 import UIKit
 
-// MARK: PixelReader + Atkinson
-
-struct DitherPixel {
-  let y: Int
-  let x: Int
-  var weight = 0.125
-}
+// MARK: PixelReader + Aman
 
 extension PixelReader {
   /// Grab RGBA values and convert to grayscale using ITU-R BT.709 luminance formula
   /// https://en.wikipedia.org/wiki/Rec._709#The_Y'C'BC'R_color_space
-  static func atkinsonRGBA(from image: StockImage) -> [[RGBA]] {
+  static func amanRGBA(from image: StockImage) -> [[RGBA]] {
     guard
       let cgImage = UIImage(named: image.rawValue)?.cgImage,
       let dataProvider = cgImage.dataProvider,
@@ -36,12 +30,12 @@ extension PixelReader {
     var rgbaValues: [[RGBA]] = []
     
     let ditherPattern: [DitherPixel] = [
-      DitherPixel(y: 0, x: 1),
-      DitherPixel(y: 0, x: 2),
-      DitherPixel(y: 1, x: -1),
-      DitherPixel(y: 1, x: 0),
-      DitherPixel(y: 1, x: 1),
-      DitherPixel(y: 2, x: 0),
+      DitherPixel(y: 0, x: 1, weight: 0.25),
+      DitherPixel(y: 0, x: 2, weight: 0.0625),
+      DitherPixel(y: 1, x: -1, weight: 0.125),
+      DitherPixel(y: 1, x: 0, weight: 0.25),
+      DitherPixel(y: 1, x: 1, weight: 0.125),
+      DitherPixel(y: 2, x: 0, weight: 0.0625),
     ]
     
     var grayscaleVector = [UInt8](repeating: 0, count: height * width)

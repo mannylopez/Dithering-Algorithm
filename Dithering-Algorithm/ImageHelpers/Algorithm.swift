@@ -14,18 +14,18 @@ enum Algorithm: String, CaseIterable {
   case atkinson = "Atkinson"
   case aman = "Aman"
   
-  func rgbaMatrix() -> [[RGBA]] {
+  func rgbaMatrix(for image: StockImage = .catFullColor) -> [[RGBA]] {
     switch self {
     case .none:
-      PixelReader.pixelsRGBA(from: .catFullColor)
+      PixelReader.pixelsRGBA(from: image)
     case .grayscale:
-      PixelReader.grayscaleRGBA(from:.catFullColor)
+      PixelReader.grayscaleRGBA(from: image)
     case .thresholding:
-      PixelReader.thresholdingRGBA(from:.catFullColor)
+      PixelReader.thresholdingRGBA(from: image)
     case .atkinson:
-      PixelReader.atkinsonRGBA(from:.catFullColor)
+      PixelReader.atkinsonRGBA(from: image)
     case .aman:
-      PixelReader.amanRGBA(from: .catFullColor)
+      PixelReader.amanRGBA(from: image)
     }
   }
 }

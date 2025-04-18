@@ -41,7 +41,6 @@ extension PixelReader {
     var grayscaleVector = [UInt8](repeating: 0, count: height * width)
     
     func setPixelLuminance(i: Int, j: Int, value: UInt8) {
-      //      grayscaleVector.append(UInt8((j + (i * width) + Int(value))))
       grayscaleVector[j + (i * width)] = value
     }
     
@@ -52,14 +51,12 @@ extension PixelReader {
     /// Grab RGBA values and convert to grayscale using ITU-R BT.709 luminance formula
     /// https://en.wikipedia.org/wiki/Rec._709#The_Y'C'BC'R_color_space
     for y in 0..<height {
-      //      var row: [RGBA] = []
       for x in 0..<width {
         let pixelOffset = y * bytesPerRow + x * bytesPerPixel
         
         let red = Self.multiplyPixel(pixelValue: data[pixelOffset], color: .red)
         let green = Self.multiplyPixel(pixelValue: data[pixelOffset + 1], color: .green)
         let blue = Self.multiplyPixel(pixelValue: data[pixelOffset + 2], color: .blue)
-        //        let alpha = data[pixelOffset + 3]
         
         let luminance = luminance(red: red, green: green, blue: blue)
         
@@ -77,21 +74,21 @@ extension PixelReader {
           let neighborY = y + ditherPixel.y
           let neighborX = x + ditherPixel.x
           
-          // only update neighbors that are within image bounds
-          guard
+          // Only update neighbors that are within image bounds
+          if
             neighborY >= 0,
             neighborY < height,
             neighborX >= 0,
             neighborX < width
-          else {
-            continue
+          {
+            let currentLuminance = getPixelLuminance(i: neighborY, j: neighborX)
+            let distributedError = round(quantError * ditherPixel.weight)
+            // Clamp new value between 0 and 255
+            let newLuminance = max(min(Double(currentLuminance) + distributedError, 255), 0)
+            // Set current pixel to threshold value
+            setPixelLuminance(i: neighborY, j: neighborX, value: UInt8(newLuminance))
           }
-          
-          let currentLuminance = getPixelLuminance(i: neighborY, j: neighborX)
-          let distributedError = round(quantError * ditherPixel.weight)
-          let newLuminance = max(min(Double(currentLuminance) + distributedError, 255), 0) // clamp new value between 0 and 255
-          setPixelLuminance(i: neighborY, j: neighborX, value: UInt8(newLuminance)) // set current pixel to threshold value
-          
+          setPixelLuminance(i: y, j: x, value: thresholdValue)
         }
       }
     }
@@ -99,9 +96,10 @@ extension PixelReader {
     for y in 0..<height {
       var row: [RGBA] = []
       for x in 0..<width {
+        let pixelOffset = y * bytesPerRow + x * bytesPerPixel
         let luminance = getPixelLuminance(i: y, j: x)
-        // TODO: (manny) Update alpha value?
-        row.append((luminance, luminance, luminance, 255))
+        let alpha = data[pixelOffset + 3]
+        row.append((luminance, luminance, luminance, alpha))
       }
       rgbaValues.append(row)
     }

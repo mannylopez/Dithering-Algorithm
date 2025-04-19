@@ -7,7 +7,16 @@
 
 import Foundation
 
-enum StockImage: String {
+enum StockImage: String, CaseIterable {
   case catFullColor = "cat_fullcolor"
   case space = "spacemd"
+  
+  func name() -> String {
+    switch self {
+    case .catFullColor:
+      "Cat"
+    case .space:
+      "Carina nebula"
+    }
+  }
 }

@@ -13,7 +13,7 @@ struct ImageView: View {
   @State private var topImageSelection = StockImage.catFullColor
   
   @State private var bottomAlgorithmSelection = Algorithm.atkinson
-  @State private var bottomImageSelection = StockImage.space
+  @State private var bottomImageSelection = StockImage.catFullColor
   
   @State private var rgba: [[RGBA]] = []
   @State private var topImage: Image = Image(systemName: "xmark.circle")

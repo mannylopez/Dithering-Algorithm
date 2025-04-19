@@ -9,8 +9,8 @@ import SwiftUI
 import UIKit
 
 struct ImageView: View {
-  @State private var topAlgorithm = Algorithm.floydSteinberg
-  @State private var bottomAlgorithm = Algorithm.atkinson
+  @State private var topAlgorithmSelection = Algorithm.floydSteinberg
+  @State private var bottomAlgorithmSelection = Algorithm.atkinson
   @State private var rgba: [[RGBA]] = []
   @State private var topImage: Image = Image(systemName: "xmark.circle")
   @State private var bottomImage: Image = Image(systemName: "xmark.circle")
@@ -34,17 +34,17 @@ struct ImageView: View {
       updateTopImage()
       updateBottomImage()
     }
-    .onChange(of: topAlgorithm, {
+    .onChange(of: topAlgorithmSelection, {
       updateTopImage()
     })
-    .onChange(of: bottomAlgorithm, {
+    .onChange(of: bottomAlgorithmSelection, {
       updateBottomImage()
     })
     .padding()
   }
   
   private func updateTopImage() {
-    rgba = topAlgorithm.rgbaMatrix(for: .space)
+    rgba = topAlgorithmSelection.rgbaMatrix(for: .space)
     if let cgImage = PixelReader.makeCGImage(from: rgba) {
       topImage = Image(decorative: cgImage, scale: 1.0)
     } else {
@@ -53,7 +53,7 @@ struct ImageView: View {
   }
   
   private func updateBottomImage() {
-    rgba = bottomAlgorithm.rgbaMatrix(for: .space)
+    rgba = bottomAlgorithmSelection.rgbaMatrix(for: .space)
     if let cgImage = PixelReader.makeCGImage(from: rgba) {
       bottomImage = Image(decorative: cgImage, scale: 1.0)
     } else {
@@ -63,7 +63,7 @@ struct ImageView: View {
   
   @ViewBuilder
   private func topPicker() -> some View {
-    Picker("Algo", selection: $topAlgorithm) {
+    Picker("Algo", selection: $topAlgorithmSelection) {
       ForEach(Algorithm.allCases, id: \.self) { algo in
         Text(algo.rawValue)
       }
@@ -72,7 +72,7 @@ struct ImageView: View {
   
   @ViewBuilder
   private func bottomPicker() -> some View {
-    Picker("Algo", selection: $bottomAlgorithm) {
+    Picker("Algo", selection: $bottomAlgorithmSelection) {
       ForEach(Algorithm.allCases, id: \.self) { algo in
         Text(algo.rawValue)
       }

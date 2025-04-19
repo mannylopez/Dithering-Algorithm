@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 
 struct ImageView: View {
-  @State private var topAlgorithm = Algorithm.grayscale
+  @State private var topAlgorithm = Algorithm.floydSteinberg
   @State private var bottomAlgorithm = Algorithm.atkinson
   @State private var rgba: [[RGBA]] = []
   @State private var topImage: Image = Image(systemName: "xmark.circle")
@@ -44,7 +44,7 @@ struct ImageView: View {
   }
   
   private func updateTopImage() {
-    rgba = topAlgorithm.rgbaMatrix(for: .catFullColor)
+    rgba = topAlgorithm.rgbaMatrix(for: .space)
     if let cgImage = PixelReader.makeCGImage(from: rgba) {
       topImage = Image(decorative: cgImage, scale: 1.0)
     } else {
@@ -53,7 +53,7 @@ struct ImageView: View {
   }
   
   private func updateBottomImage() {
-    rgba = bottomAlgorithm.rgbaMatrix(for: .catFullColor)
+    rgba = bottomAlgorithm.rgbaMatrix(for: .space)
     if let cgImage = PixelReader.makeCGImage(from: rgba) {
       bottomImage = Image(decorative: cgImage, scale: 1.0)
     } else {

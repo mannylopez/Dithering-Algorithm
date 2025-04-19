@@ -1,19 +1,19 @@
 //
-//  PixelReader+Aman.swift
+//  PixelReader+FloydSteinberg.swift
 //  Dithering-Algorithm
 //
-//  Created by Manuel Lopez on 4/15/25.
+//  Created by Manuel Lopez on 4/19/25.
 //
 
 import CoreGraphics
 import UIKit
 
-// MARK: PixelReader + Aman
+// MARK: PixelReader + Floyd-Steinberg
 
 extension PixelReader {
   /// Grab RGBA values and convert to grayscale using ITU-R BT.709 luminance formula
   /// https://en.wikipedia.org/wiki/Rec._709#The_Y'C'BC'R_color_space
-  static func amanRGBA(from image: StockImage) -> [[RGBA]] {
+  static func floydSteinbergRGBA(from image: StockImage) -> [[RGBA]] {
     guard
       let cgImage = UIImage(named: image.rawValue)?.cgImage,
       let dataProvider = cgImage.dataProvider,
@@ -29,7 +29,7 @@ extension PixelReader {
     
     var rgbaValues: [[RGBA]] = []
     
-    let ditherPattern: [DitherPixel] = Algorithm.aman.pattern()
+    let ditherPattern: [DitherPixel] = Algorithm.floydSteinberg.pattern()
     
     var grayscaleVector = [UInt8](repeating: 0, count: height * width)
     
@@ -50,7 +50,6 @@ extension PixelReader {
         let red = Self.multiplyPixel(pixelValue: data[pixelOffset], color: .red)
         let green = Self.multiplyPixel(pixelValue: data[pixelOffset + 1], color: .green)
         let blue = Self.multiplyPixel(pixelValue: data[pixelOffset + 2], color: .blue)
-        
         let luminance = luminance(red: red, green: green, blue: blue)
         
         setPixelLuminance(i: y, j: x, value: luminance)
@@ -99,4 +98,5 @@ extension PixelReader {
     return rgbaValues
   }
 }
+
 

@@ -10,12 +10,6 @@ import UIKit
 
 // MARK: PixelReader + Atkinson
 
-struct DitherPixel {
-  let y: Int
-  let x: Int
-  var weight = 0.125
-}
-
 extension PixelReader {
   /// Grab RGBA values and convert to grayscale using ITU-R BT.709 luminance formula
   /// https://en.wikipedia.org/wiki/Rec._709#The_Y'C'BC'R_color_space
@@ -33,16 +27,7 @@ extension PixelReader {
     let bytesPerPixel = 4
     let bytesPerRow = cgImage.bytesPerRow
     
-    var rgbaValues: [[RGBA]] = []
-    
-    let ditherPattern: [DitherPixel] = [
-      DitherPixel(y: 0, x: 1),
-      DitherPixel(y: 0, x: 2),
-      DitherPixel(y: 1, x: -1),
-      DitherPixel(y: 1, x: 0),
-      DitherPixel(y: 1, x: 1),
-      DitherPixel(y: 2, x: 0),
-    ]
+    let ditherPattern: [DitherPixel] = Algorithm.atkinson.pattern()
     
     var grayscaleVector = [UInt8](repeating: 0, count: height * width)
     
@@ -69,6 +54,7 @@ extension PixelReader {
       }
     }
     
+    // Apply dither algorithm
     for y in 0..<height {
       for x in 0..<width {
         let luminance = getPixelLuminance(i: y, j: x)
@@ -97,6 +83,8 @@ extension PixelReader {
         }
       }
     }
+    
+    var rgbaValues: [[RGBA]] = []
     
     for y in 0..<height {
       var row: [RGBA] = []

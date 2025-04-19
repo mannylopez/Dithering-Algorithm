@@ -9,4 +9,5 @@ import Foundation
 
 enum StockImage: String {
   case catFullColor = "cat_fullcolor"
+  case space = "spacemd"
 }

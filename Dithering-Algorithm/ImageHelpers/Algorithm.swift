@@ -18,6 +18,7 @@ enum Algorithm: String, CaseIterable {
   case burkes = "Burkes"
   case sierra3 = "Sierra3"
   case sierra2 = "Sierra2"
+  case sierra1 = "Sierra1"
   
   func rgbaMatrix(for image: StockImage = .catFullColor) -> [[RGBA]] {
     switch self {
@@ -27,7 +28,7 @@ enum Algorithm: String, CaseIterable {
       PixelReader.grayscaleRGBA(from: image)
     case .thresholding:
       PixelReader.thresholdingRGBA(from: image)
-    case .atkinson, .floydSteinberg, .jarvisJudiceNinke, .stucki, .burkes, .sierra3, .sierra2:
+    case .atkinson, .floydSteinberg, .jarvisJudiceNinke, .stucki, .burkes, .sierra3, .sierra2, .sierra1:
       PixelReader.createRGBA(from: image, using: self)
     }
   }
@@ -151,6 +152,16 @@ enum Algorithm: String, CaseIterable {
         DitherPixel(y: 1, x: 0, weight: 3.0 / 16.0),
         DitherPixel(y: 1, x: 1, weight: 2.0 / 16.0),
         DitherPixel(y: 1, x: 2, weight: 1.0 / 16.0),
+      ]
+    case .sierra1:
+      //      *   2
+      //  1   1
+      //
+      //  (1/4)
+      [
+        DitherPixel(y: 0, x: 1, weight: 2.0 / 4.0),
+        DitherPixel(y: 1, x: -1, weight: 1.0 / 4.0),
+        DitherPixel(y: 1, x: 0, weight: 1.0 / 4.0),
       ]
     }
   }

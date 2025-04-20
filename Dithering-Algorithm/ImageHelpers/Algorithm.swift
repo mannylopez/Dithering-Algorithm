@@ -17,6 +17,7 @@ enum Algorithm: String, CaseIterable {
   case stucki = "Stucki"
   case burkes = "Burkes"
   case sierra3 = "Sierra3"
+  case sierra2 = "Sierra2"
   
   func rgbaMatrix(for image: StockImage = .catFullColor) -> [[RGBA]] {
     switch self {
@@ -26,7 +27,7 @@ enum Algorithm: String, CaseIterable {
       PixelReader.grayscaleRGBA(from: image)
     case .thresholding:
       PixelReader.thresholdingRGBA(from: image)
-    case .atkinson, .floydSteinberg, .jarvisJudiceNinke, .stucki, .burkes, .sierra3:
+    case .atkinson, .floydSteinberg, .jarvisJudiceNinke, .stucki, .burkes, .sierra3, .sierra2:
       PixelReader.createRGBA(from: image, using: self)
     }
   }
@@ -81,7 +82,7 @@ enum Algorithm: String, CaseIterable {
         DitherPixel(y: 1, x: 2, weight: 3.0 / 48.0),
         DitherPixel(y: 2, x: -2, weight: 1.0 / 48.0),
         DitherPixel(y: 2, x: -1, weight: 3.0 / 48.0),
-        DitherPixel(y: 2, x: 0, weight: 4.0 / 48.0),
+        DitherPixel(y: 2, x: 0, weight: 5.0 / 48.0),
         DitherPixel(y: 2, x: 1, weight: 3.0 / 48.0),
         DitherPixel(y: 2, x: 2, weight: 1.0 / 48.0),
       ]
@@ -109,7 +110,7 @@ enum Algorithm: String, CaseIterable {
       //          *   8   4
       //  2   4   8   4   2
       //
-      //  (1/42)
+      //  (1/32)
       [
         DitherPixel(y: 0, x: 1, weight: 8.0 / 32.0),
         DitherPixel(y: 0, x: 2, weight: 4.0 / 32.0),
@@ -120,22 +121,36 @@ enum Algorithm: String, CaseIterable {
         DitherPixel(y: 1, x: 2, weight: 2.0 / 32.0),
       ]
     case .sierra3:
-      //      *   5   3
+      //          *   5   3
       //  2   4   5   4   2
-      //  2   3   2
+      //      2   3   2
       //
       //  (1/32)
       [
         DitherPixel(y: 0, x: 1, weight: 5.0 / 32.0),
         DitherPixel(y: 0, x: 2, weight: 3.0 / 32.0),
-        DitherPixel(y: 1, x: -1, weight: 2.0 / 32.0),
-        DitherPixel(y: 1, x: 0, weight: 4.0 / 32.0),
-        DitherPixel(y: 1, x: 1, weight: 5.0 / 32.0),
-        DitherPixel(y: 1, x: 2, weight: 4.0 / 32.0),
-        DitherPixel(y: 1, x: 3, weight: 2.0 / 32.0),
+        DitherPixel(y: 1, x: -2, weight: 2.0 / 32.0),
+        DitherPixel(y: 1, x: -1, weight: 4.0 / 32.0),
+        DitherPixel(y: 1, x: 0, weight: 5.0 / 32.0),
+        DitherPixel(y: 1, x: 1, weight: 4.0 / 32.0),
+        DitherPixel(y: 1, x: 2, weight: 2.0 / 32.0),
         DitherPixel(y: 2, x: -1, weight: 2.0 / 32.0),
         DitherPixel(y: 2, x: 0, weight: 3.0 / 32.0),
         DitherPixel(y: 2, x: 1, weight: 2.0 / 32.0),
+      ]
+    case .sierra2:
+      //          *   4   3
+      //  1   2   3   2   1
+      //
+      //  (1/16)
+      [
+        DitherPixel(y: 0, x: 1, weight: 4.0 / 16.0),
+        DitherPixel(y: 0, x: 2, weight: 3.0 / 16.0),
+        DitherPixel(y: 1, x: -2, weight: 1.0 / 16.0),
+        DitherPixel(y: 1, x: -1, weight: 2.0 / 16.0),
+        DitherPixel(y: 1, x: 0, weight: 3.0 / 16.0),
+        DitherPixel(y: 1, x: 1, weight: 2.0 / 16.0),
+        DitherPixel(y: 1, x: 2, weight: 1.0 / 16.0),
       ]
     }
   }

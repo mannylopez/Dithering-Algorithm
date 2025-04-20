@@ -24,13 +24,7 @@ enum Algorithm: String, CaseIterable {
       PixelReader.grayscaleRGBA(from: image)
     case .thresholding:
       PixelReader.thresholdingRGBA(from: image)
-    case .atkinson:
-      PixelReader.atkinsonRGBA(from: image)
-    case .aman:
-      PixelReader.amanRGBA(from: image)
-    case .floydSteinberg:
-      PixelReader.floydSteinbergRGBA(from: image)
-    case .jarvisJudiceNinke:
+    case .atkinson, .aman, .floydSteinberg, .jarvisJudiceNinke:
       PixelReader.createRGBA(from: image, using: self)
     }
   }

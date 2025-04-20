@@ -21,4 +21,3 @@ struct PixelReader {
     Double(pixelValue) * color.luminance()
   }
 }
-  

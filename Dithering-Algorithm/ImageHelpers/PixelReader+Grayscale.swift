@@ -10,23 +10,6 @@ import UIKit
 
 // MARK: PixelReader + grayscaleRGBA
 
-enum ColorValue {
-  case red
-  case green
-  case blue
-  
-  func luminance() -> Double {
-    switch self {
-    case .red:
-      0.2126
-    case .green:
-      0.7152
-    case .blue:
-      0.0722
-    }
-  }
-}
-
 extension PixelReader {
   /// Grab RGBA values and convert to grayscale using ITU-R BT.709 luminance formula
   /// https://en.wikipedia.org/wiki/Rec._709#The_Y'C'BC'R_color_space
@@ -63,14 +46,5 @@ extension PixelReader {
       rgbaValues.append(row)
     }
     return rgbaValues
-  }
-  
-  static func luminance(red: Double, green: Double, blue: Double) -> UInt8{
-    return UInt8(min(round(red + green + blue), 255))
-    
-  }
-  
-  static func multiplyPixel(pixelValue: UInt8, color: ColorValue) -> Double {
-    Double(pixelValue) * color.luminance()
   }
 }

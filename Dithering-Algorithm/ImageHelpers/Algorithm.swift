@@ -8,7 +8,7 @@
 import Foundation
 
 enum Algorithm: String, CaseIterable {
-  case none = "None"
+  case copy = "Copy"
   case grayscale = "Grayscale"
   case thresholding = "Thresholding"
   case atkinson = "Atkinson"
@@ -17,8 +17,8 @@ enum Algorithm: String, CaseIterable {
   
   func rgbaMatrix(for image: StockImage = .catFullColor) -> [[RGBA]] {
     switch self {
-    case .none:
-      PixelReader.pixelsRGBA(from: image)
+    case .copy:
+      PixelReader.pixelCopyRGBA(from: image)
     case .grayscale:
       PixelReader.grayscaleRGBA(from: image)
     case .thresholding:
@@ -34,7 +34,7 @@ enum Algorithm: String, CaseIterable {
   
   func pattern() -> [DitherPixel] {
     switch self {
-    case .none:
+    case .copy:
       []
     case .grayscale:
       []

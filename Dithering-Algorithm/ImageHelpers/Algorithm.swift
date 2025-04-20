@@ -12,9 +12,9 @@ enum Algorithm: String, CaseIterable {
   case grayscale = "Grayscale"
   case thresholding = "Thresholding"
   case atkinson = "Atkinson"
-  case aman = "Aman"
   case floydSteinberg = "Floyd-Steinberg"
   case jarvisJudiceNinke = "Jarvis, Judice, and Ninke"
+  case stucki = "Stucki"
   
   func rgbaMatrix(for image: StockImage = .catFullColor) -> [[RGBA]] {
     switch self {
@@ -24,7 +24,7 @@ enum Algorithm: String, CaseIterable {
       PixelReader.grayscaleRGBA(from: image)
     case .thresholding:
       PixelReader.thresholdingRGBA(from: image)
-    case .atkinson, .aman, .floydSteinberg, .jarvisJudiceNinke:
+    case .atkinson, .floydSteinberg, .jarvisJudiceNinke, .stucki:
       PixelReader.createRGBA(from: image, using: self)
     }
   }
@@ -51,15 +51,6 @@ enum Algorithm: String, CaseIterable {
         DitherPixel(y: 1, x: 0, weight: 0.125),
         DitherPixel(y: 1, x: 1, weight: 0.125),
         DitherPixel(y: 2, x: 0, weight: 0.125),
-      ]
-    case .aman:
-      [
-        DitherPixel(y: 0, x: 1, weight: 0.25),
-        DitherPixel(y: 0, x: 2, weight: 0.0625),
-        DitherPixel(y: 1, x: -1, weight: 0.125),
-        DitherPixel(y: 1, x: 0, weight: 0.25),
-        DitherPixel(y: 1, x: 1, weight: 0.125),
-        DitherPixel(y: 2, x: 0, weight: 0.0625),
       ]
     case .floydSteinberg:
       //      *   7
@@ -91,6 +82,26 @@ enum Algorithm: String, CaseIterable {
         DitherPixel(y: 2, x: 0, weight: 4.0 / 48.0),
         DitherPixel(y: 2, x: 1, weight: 3.0 / 48.0),
         DitherPixel(y: 2, x: 2, weight: 1.0 / 48.0),
+      ]
+    case .stucki:
+      //          *   8   4
+      //  2   4   8   4   2
+      //  1   2   4   2   1
+      //
+      //  (1/42)
+      [
+        DitherPixel(y: 0, x: 1, weight: 8.0 / 42.0),
+        DitherPixel(y: 0, x: 2, weight: 4.0 / 42.0),
+        DitherPixel(y: 1, x: -2, weight: 2.0 / 42.0),
+        DitherPixel(y: 1, x: -1, weight: 4.0 / 42.0),
+        DitherPixel(y: 1, x: 0, weight: 8.0 / 42.0),
+        DitherPixel(y: 1, x: 1, weight: 4.0 / 42.0),
+        DitherPixel(y: 1, x: 2, weight: 2.0 / 42.0),
+        DitherPixel(y: 2, x: -2, weight: 1.0 / 42.0),
+        DitherPixel(y: 2, x: -1, weight: 2.0 / 42.0),
+        DitherPixel(y: 2, x: 0, weight: 4.0 / 42.0),
+        DitherPixel(y: 2, x: 1, weight: 2.0 / 42.0),
+        DitherPixel(y: 2, x: 2, weight: 1.0 / 42.0),
       ]
     }
   }
